@@ -8,12 +8,8 @@ import "./ERC20Burnable.sol";
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 
 contract BetGame is VRFConsumerBase{
-    /////////////////////EVENTS//////////////////////////
-    event PayFee(address indexed player, uint256 indexed amount);
-    event ClaimPrice(address indexed winner, uint256 indexed amountGotten);
-    event Withdraw(address indexed receiver, uint256 indexed amount);
-    event TimeStarted(uint256 time);
 
+    ///////////////////STATE VARIABLES///////////////////
      address public admin; //bet admin
 
      address immutable tokenAddress; //bet token address
@@ -58,7 +54,15 @@ contract BetGame is VRFConsumerBase{
      mapping(address => bool) claimed;
      mapping (address => bool) public Winners;
 
+
+    /////////////////////EVENTS//////////////////////////
+    event PayFee(address indexed player, uint256 indexed amount);
+    event ClaimPrice(address indexed winner, uint256 indexed amountGotten);
+    event Withdraw(address indexed receiver, uint256 indexed amount);
+    event TimeStarted(uint256 time);
+
     
+    ///////////////////CONSTRUCTOR///////////////////////
      constructor( address _tokenAddress, uint256 _price) VRFConsumerBase(
             0x8C7382F9D8f56b33781fE506E897a4F1e2d17255, // VRF Coordinator
             0x326C977E6efc84E512bB9C30f76E30c160eD06FB  // LINK Token 
@@ -74,7 +78,7 @@ contract BetGame is VRFConsumerBase{
      }
 
 
-     /////////////ERROR MESSAGE////////////
+     ///////////////////ERROR MESSAGE///////////////////////
      error NotAdmin();
 
      error NotSufficientEther(uint amountInputed, uint amountExpected);
@@ -222,6 +226,7 @@ contract BetGame is VRFConsumerBase{
 
      }
 
+     ///@dev function to view game winners
       function viewWinner() public view returns(address[] memory ) {
   
         if(block.timestamp > deadline){
@@ -230,6 +235,7 @@ contract BetGame is VRFConsumerBase{
 
     }
 
+    ///@dev function to show lucky number winner after the game has ended
     function showLuckyNumber() public view returns(uint256){
 
         if(block.timestamp > deadline){
@@ -240,6 +246,7 @@ contract BetGame is VRFConsumerBase{
   
      }
 
+     ///@dev function for owner/admin to withdraw their profit
     function withdrawProfit(address to) public {
         require(block.timestamp > deadline, "lottery not ended");
         if(msg.sender != admin){
@@ -255,18 +262,23 @@ contract BetGame is VRFConsumerBase{
 
      }
 
+     ///@dev function to get contract balance
     function getContractBal() public view returns(uint256){
         return address(this).balance;
      }
 
+     /// ///@dev function to get contract token balance
     function getTokenBal() public view returns(uint256){
         return IERC20(tokenAddress).balanceOf(address(this));
     }
 
+    ///@dev function to get the bet game participants
     function getParticipants() public view returns(uint256){
         return participants.length;
      }
 
+
+     ///@dev function for admin to withdraw lock fucks if winner doesn't claim their price at due time
     function withdrawLockFunds(address to) public {
         if(msg.sender != admin){
             revert NotAdmin();
@@ -275,6 +287,7 @@ contract BetGame is VRFConsumerBase{
         payable(to).transfer(address(this).balance);
     }
 
+    ///@dev function for admin to withdraw contract token balance
     function withdrawTokenBalance(address to) public{
         if(msg.sender != admin){
             revert NotAdmin();
