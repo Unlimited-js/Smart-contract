@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.4;
 import "./IERC20.sol";
 import "./ERC20Burnable.sol";
 //import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
