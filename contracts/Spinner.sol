@@ -2,16 +2,8 @@
 pragma solidity ^0.8.4;
 
 import "./IERC20.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 contract Spinner {
-    using Counters for Counters.Counter;
-    using SafeMath for uint256;
-    uint8 public SPINID;
-    uint8 prevSpinId;
-
-    Counters.Counter private spinId;
 
     ////////////////////STATE VARIABLES///////////////////
     address admin;
@@ -19,6 +11,8 @@ contract Spinner {
     uint256 randomResult;
     uint8 currentHighestNumber;
     address winnerAddress;
+    uint8 public SPINID;
+    uint8 public prevSpin;
 
     struct Spin {
         uint24 spinId;
@@ -27,30 +21,19 @@ contract Spinner {
         uint8 EntryPrice;
         address winner;
         uint8 randomNumber;
-        // bool claimed;
         bool finished;
         uint deadline;
         mapping(address => uint8) numTracker;
     }
 
-    mapping(address => mapping(uint8 => Spin)) spinners;
+    mapping(uint8 => Spin) spinners;
     mapping(uint256 => uint256) playersCount;
-    mapping(uint8 => bool) spincreated;
 
-    ////////////////////EVENTS////////////////
-    event Randomness(bytes32, uint256);
-    event Winner(bytes32, uint256, address);
-    event SpinCreated(
-        uint256 ID,
-        uint8 Entryprice,
-        uint256 prize,
-        uint24 deadline
-    );
 
     ////////////////////CONSTRUCTOR/////////////////////
     constructor(address _tokenAddress) {
         admin = msg.sender;
-        tokenAddress = _tokenAddress;
+        tokenAddress = _tokenAddress;    
     }
 
     ///////////////////ERROR MESSAGE///////////////////////
@@ -61,9 +44,8 @@ contract Spinner {
 
     //////////////////FUNCTIONS////////////////////////////
 
-
-    modifier timeElapsed(address adminaddr, uint8 _spinID){
-        Spin storage SD = spinners[adminaddr][_spinID];
+    modifier timeElapsed(uint8 _spinID){
+        Spin storage SD = spinners[_spinID];
         require(SD.deadline > block.timestamp, "Time has elapsed");
         _;
     }
@@ -77,28 +59,20 @@ contract Spinner {
             "entry price should be greater than 0"
         );
 
-        require(spincreated[prevSpinId] == false, "spin still on");
-  
-       Spin storage SP = spinners[msg.sender][SPINID];
+       prevSpin = SPINID;
+       Spin storage SP = spinners[SPINID];
        SP.EntryPrice = _entryPrice;
        SP.deadline = _deadline + block.timestamp;
        SP.spinId = SPINID;
 
-       prevSpinId = SPINID;
-
-       spincreated[SPINID] = true;
-
        SPINID++;
-
-        //emit SpinCreated(sp.spinId, sp.EntryPrice, sp.prize, sp.deadline);
     }
 
-    function spin(address adminaddr, uint8 _spinID) external payable  returns(uint256) {
-        Spin storage SD = spinners[adminaddr][_spinID];
+    function spin(uint8 _spinID) external payable  returns(uint256) {
+        Spin storage SD = spinners[_spinID];
         require(msg.value >= SD.EntryPrice, "insufficient balance");
 
         if(block.timestamp > SD.deadline){
-            
 
         }
 
@@ -120,26 +94,21 @@ contract Spinner {
         return randNumber;
     }
 
-    function claimReward(address adminaddr, uint8 _spinID) external timeElapsed(adminaddr, _spinID){
-        Spin storage SD = spinners[adminaddr][_spinID];
+    function claimReward( uint8 _spinID) external timeElapsed(_spinID){
+        Spin storage SD = spinners[_spinID];
         require(msg.sender == winnerAddress, "you are not the winner");
         IERC20(tokenAddress).transfer(msg.sender, 10);
         SD.finished = true;
-        spincreated[SPINID] = false;
+        
     }
 
-
-    function getSpinCount() public view returns (uint256) {
-        return spinId.current();
-    }
-
-    function checkmyNum(address adminaddr, uint8 _spinID) public view returns(uint8){
-        Spin storage SD = spinners[adminaddr][_spinID];
+    function checkmyNum(uint8 _spinID) public view returns(uint8){
+        Spin storage SD = spinners[_spinID];
         return SD.numTracker[msg.sender];
     }
 
-    function timeleft(address adminaddr, uint8 _spinID) public view returns(uint){
-        Spin storage SD = spinners[adminaddr][_spinID];
+    function timeleft(uint8 _spinID) public view returns(uint){
+        Spin storage SD = spinners[_spinID];
         uint24 remainingTime = uint24(SD.deadline - block.timestamp);
         return remainingTime;
     }
