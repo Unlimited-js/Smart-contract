@@ -20,6 +20,16 @@ async function main() {
    await betgame.deployed();
  
    console.log("Betgame contract is deployed to:", betgame.address);
+   
+
+   ////////////////DEPLOYING THE SPIN CONTRACT////////////////
+
+   const Spinner = await ethers.getContractFactory("Spinner");
+   const spinner = await Spinner.deploy();
+ 
+   await spinner.deployed();
+ 
+   console.log("Spin game contract is deployed to:", spinner.address);
  
 
 }

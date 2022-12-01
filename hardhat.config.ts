@@ -16,7 +16,6 @@ const config: HardhatUserConfig = {
     ]
   },
   networks: {
-    //use mumbai
     mumbai: {
       url: process.env.MUMBAI,
       // @ts-ignore
