@@ -17,9 +17,8 @@ const config: HardhatUserConfig = {
   },
   networks: {
     mumbai: {
-      url: process.env.MUMBAI,
-      // @ts-ignore
-      accounts: [process.env.PRIVATE_KEY_1]
+      url: process.env.MUMBAI,    
+      accounts: [process.env.PRIVATE_KEY_1 as string]
     }
   },
   etherscan: {
