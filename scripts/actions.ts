@@ -1,12 +1,25 @@
 import { ethers } from "hardhat";
 
 
-const betGameAddress="0x57ad7b16f84356ee566b0cf3d43d7072b5de0e05"
+const betGameAddress="0x8D1558961a1c49D7C933c32d5EfCf9EFF5105A74"
 const betTokenAddress="0x5AB4c09A339C9139B28D6bfE168e45682391F307"
 
 
+const wait =async(time:number)=>{
+
+  return new Promise(res =>setTimeout(()=>{}, time * 60 *1000))
+}
+
 export const startBet = async ()=>{
  const betContract = await ethers.getContractAt("BetGame", betGameAddress)
+//  const randomNumber = await betContract.getRandomNumber()
+//  console.log(" Random Number ++++++++++++++++++++++\n")
+//  console.log(randomNumber)
+//  console.log("Random Number ++++++++++++++++++++++\n")
+
+//  console.log("++++++++++++ waitin for vrf number")
+//  await wait(4)
+
     // @ts-ignore
 // const tokenContract =   await ethers.getContractAt("ERC20Token", betTokenAddress)
 
@@ -14,26 +27,32 @@ export const startBet = async ()=>{
 //  const result =  await tx.wait()
 //   console.log(result, "Token transferred to contract successfully\n")
 
-  const currentTime = Date.parse(Date())
+
+  const currentTime = Date.now()
   const durationInHours =  2
-const timeStarted = (currentTime/1000) + (durationInHours * 3600)
-  // const start = await betContract.startBetRound(timeStarted, {
-  //   gasLimit:"50000"
-  // })
-  const start = await betContract.setBetNumber()
-  const startResult = await  start.wait()
-  console.log(startResult, "Bet round started")      
+
+const timeStarted =   Math.ceil((currentTime/1000000) - (durationInHours * 3600))
+
+
+  // const setNumber = await betContract.setBetNumber()
+  //  await  setNumber.wait()
+
+    const start = await betContract.startBetRound(timeStarted, {
+    gasLimit:"5000000"
+  })
+const startBet =  await start.wait()
+  console.log(startBet, "Bet round started")      
 
 
 }
 
-
-const tokenReceiver="0x1049dCFe27985721Fb103d22076266377381eC7D"
+// 0x51B757F621ea9C7d06A7705170E5E82B1ec161d9 faucet address
+const tokenReceiver="0xC0c96bb9Faba64D794EF9790EB0904597E6C6F60"
 export const sendToken = async ()=>{
        // @ts-ignore
    const tokenContract =   await ethers.getContractAt("ERC20Token", betTokenAddress)
    
-     const tx = await  tokenContract.transferFromContract(tokenReceiver, "10000000000000000000")
+     const tx = await  tokenContract.transferFromContract(tokenReceiver, "10000000000000000000000")
     const result =  await tx.wait()
      console.log(result, "Token transferred to successfully\n")
      

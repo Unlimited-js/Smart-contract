@@ -21,9 +21,9 @@ contract BetGame is VRFConsumerBase {
 
     uint256 request;
 
-    address[] betWinners; //array of bet game winners
+    address[] public betWinners; //array of bet game winners
 
-    uint256 public betNumber; // set bet number
+    uint256  betNumber; // set bet number
 
     bytes32 internal keyHash;
 

@@ -25,8 +25,8 @@ contract Spinner {
         mapping(address => uint8) numTracker;
     }
 
-    mapping(uint8 => Spin) spinners;
-    mapping(uint8 => bool) rounds;
+    mapping(uint8 => Spin)public  spinners;
+    mapping(uint8 => bool) public rounds;
 
 
     ////////////////////CONSTRUCTOR/////////////////////
