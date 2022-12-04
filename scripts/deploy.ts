@@ -9,13 +9,15 @@ async function main() {
   await gtoken.deployed();
 
   console.log("Bet game token contract is deployed to:", gtoken.address);
+  // const gTokenAddress= "0x5AB4c09A339C9139B28D6bfE168e45682391F307"
+  const gTokenAddress=gtoken.address
 
 
    ////////DEPLOYING THE  GAME CONTRACT
    const price = await ethers.utils.parseEther("5");
 
    const Betgame = await ethers.getContractFactory("BetGame");
-   const betgame = await Betgame.deploy(gtoken.address, price);
+   const betgame = await Betgame.deploy(gTokenAddress, price);
  
    await betgame.deployed();
  
