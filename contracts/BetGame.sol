@@ -2,10 +2,10 @@
 pragma solidity ^0.8.4;
 import "./IERC20.sol";
 import "./ERC20Burnable.sol";
-//import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/IERC20.sol";
-//import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
+
+/// @dev Sayrarh
+/// @title Bet Game contract
 
 contract BetGame is VRFConsumerBase{
 
@@ -38,9 +38,9 @@ contract BetGame is VRFConsumerBase{
 
      uint8 public totalWinners;
     
-     bool betStarted;
+     bool public betStarted;
      
-     bool betEnded;
+     bool public betEnded;
 
      bool response;
 

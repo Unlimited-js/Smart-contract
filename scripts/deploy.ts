@@ -30,8 +30,10 @@ async function main() {
    await spinner.deployed();
  
    console.log("Spin game contract is deployed to:", spinner.address);
- 
-
+   
+   //Bet game token contract is deployed to: 0xf30D5e453895Ca4181A21246445FCc8dF1B48426
+   //Betgame contract is deployed to: 0xf49Ac7fE4B33eAf5Cd7f6Eb1b97427626fbe673A
+   //Spin game contract is deployed to: 0x51425b6b3A7617C2f2FCC245Ef8276b55Dc9698D
 }
 
 // We recommend this pattern to be able to use async/await everywhere
