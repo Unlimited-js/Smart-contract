@@ -2,8 +2,13 @@
 pragma solidity ^0.8.4;
 
 import "./IERC20.sol";
-contract Spinner {
 
+ /// @dev Sayrarh
+/// @title Spin the wheel game
+
+
+contract Spinner {
+   
     ////////////////////STATE VARIABLES///////////////////
     address admin;
     address immutable tokenAddress;
